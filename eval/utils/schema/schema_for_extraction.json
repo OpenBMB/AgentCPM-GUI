@@ -1,0 +1,185 @@
+{
+  "type": "object",
+  "description": "执行操作并决定当前任务状态",
+  "additionalProperties": false,
+  "properties": {
+    "thought": {
+      "type": "string"
+    },
+    "POINT": {
+      "description": "点击屏幕上的指定位置",
+      "$ref": "#/$defs/Location"
+    },
+    "to": {
+      "description": "移动，组合手势参数",
+      "oneOf": [
+        {
+          "enum": [
+            "up",
+            "down",
+            "left",
+            "right"
+          ],
+          "description": "结合 POINT 操作，实现向上下左右滑动"
+        },
+        {
+          "$ref": "#/$defs/Location",
+          "description": "移动到某个位置"
+        }
+      ]
+    },
+    "duration": {
+      "type": "integer",
+      "description": "动作执行的时间或等待时间，毫秒",
+      "minimum": 0,
+      "default": 200
+    },
+    "PRESS": {
+      "type": "string",
+      "description": "触发特殊按键，HOME为回到主页按钮，BACK为返回按钮，ENTER为回撤按钮，APPSELECT为查看已打开APP列表按钮",
+      "enum": [
+        "HOME",
+        "BACK",
+        "ENTER",
+        "APPSELECT"
+      ]
+    },
+    "TYPE": {
+      "type": "string",
+      "description": "输入文本"
+    },
+    "DEEP_LINK": {
+      "type": "null",
+      "description": "跳转到最近打开的 APP"
+    },
+    "CLEAR": {
+      "type": "null",
+      "description": "清空输入框的内容"
+    },
+    "STATUS": {
+      "type": "string",
+      "description": "当前任务的状态。特殊情况：satisfied，无需操作；impossible，任务无法完成；interrupt，任务中断；need_feedback，需要用户反馈；",
+      "enum": [
+        "continue",
+        "start",
+        "finish",
+        "satisfied",
+        "impossible",
+        "interrupt",
+        "need_feedback"
+      ],
+      "default": "continue"
+    }
+  },
+  "$defs": {
+    "Location": {
+      "type": "array",
+      "description": "坐标为相对于屏幕左上角位原点的相对位置，并且按照宽高比例缩放到 0～1000，数组第一个元素为横坐标 x，第二个元素为纵坐标 y",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1000
+      },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["to"]
+      },
+      "then": {
+        "required": ["POINT"]
+      }
+    },
+    {
+      "if": {
+        "anyOf": [
+          { "not": { "required": ["STATUS"] } },
+          { "properties": { "STATUS": { "enum": ["continue", "start"] } } }
+        ]
+      },
+      "then": {
+        "anyOf": [
+          { "required": ["POINT"] },
+          { "required": ["PRESS"] },
+          { "required": ["TYPE"] },
+          { "required": ["DEEP_LINK"] },
+          { "required": ["CLEAR"] },
+          { "required": ["duration"] }
+        ]
+      }
+    },
+    {
+      "oneOf": [
+        {
+          "required": ["POINT"],
+          "not": {
+            "anyOf": [
+              { "required": ["PRESS"] },
+              { "required": ["TYPE"] },
+              { "required": ["DEEP_LINK"] },
+              { "required": ["CLEAR"] }
+            ]
+          }
+        },
+        {
+          "required": ["PRESS"],
+          "not": {
+            "anyOf": [
+              { "required": ["POINT"] },
+              { "required": ["TYPE"] },
+              { "required": ["DEEP_LINK"] },
+              { "required": ["CLEAR"] }
+            ]
+          }
+        },
+        {
+          "required": ["TYPE"],
+          "not": {
+            "anyOf": [
+              { "required": ["POINT"] },
+              { "required": ["PRESS"] },
+              { "required": ["DEEP_LINK"] },
+              { "required": ["CLEAR"] }
+            ]
+          }
+        },
+        {
+          "required": ["DEEP_LINK"],
+          "not": {
+            "anyOf": [
+              { "required": ["POINT"] },
+              { "required": ["PRESS"] },
+              { "required": ["TYPE"] },
+              { "required": ["CLEAR"] }
+            ]
+          }
+        },
+        {
+          "required": ["CLEAR"],
+          "not": {
+            "anyOf": [
+              { "required": ["POINT"] },
+              { "required": ["PRESS"] },
+              { "required": ["TYPE"] },
+              { "required": ["DEEP_LINK"] }
+            ]
+          }
+        },
+        {
+          "not": {
+            "anyOf": [
+              { "required": ["POINT"] },
+              { "required": ["PRESS"] },
+              { "required": ["TYPE"] },
+              { "required": ["DEEP_LINK"] },
+              { "required": ["CLEAR"] }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
