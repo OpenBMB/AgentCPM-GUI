@@ -87,7 +87,7 @@ def annotate_and_save_image(img_path, output_folder, gt_action_type, gt_action_d
 
 
 def get_dataset_dir(data_name):
-    data_list = ['android_control_test_low', 'android_control_test', 'gui_odyssey_test', 'domestic_test', 'aitz_test']
+    data_list = ['aitz_test', 'chinese_app_test', 'gui_odyssey_test', 'android_control_high_test', 'android_control_low_test']
     assert data_name in data_list, "Error, unkonw eval dataset."
     data_split = None
     data_dir = None
@@ -101,20 +101,20 @@ def get_dataset_dir(data_name):
             data_dir = os.path.join(data_dir, "eval_data", "aitz_test")
             data_split = "test"
             data_subset = ["general", "install", "web_shopping", "google_apps"]
-        case 'domestic_test':
-            data_dir = os.path.join(data_dir, "eval_data", "domestic_test")
+        case 'chinese_app_test':
+            data_dir = os.path.join(data_dir, "eval_data", "chinese_app_test")
             data_split = "test"
-            data_subset = ["domestic"]
+            data_subset = ["chinese_app"]
         case 'gui_odyssey_test':
             data_dir = os.path.join(data_dir, "eval_data", "odyssey")
             data_split = "test"
             data_subset = ["odyssey"]
-        case 'android_control_test':
-            data_dir = os.path.join(data_dir, "eval_data", "android_control_test")
+        case 'android_control_high_test':
+            data_dir = os.path.join(data_dir, "eval_data", "android_control_high_test")
             data_split = "test"
             data_subset = ["android_control"]
-        case 'android_control_test_low':
-            data_dir = os.path.join(data_dir, "eval_data", "android_control_test_low")
+        case 'android_control_low_test':
+            data_dir = os.path.join(data_dir, "eval_data", "android_control_low_test")
             data_split = "test"
             data_subset = ["android_control"]
 

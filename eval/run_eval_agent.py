@@ -206,7 +206,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=2020, help="Random seed")
     parser.add_argument("--input_path", type=str, required=True, help="Path to input prediction JSONL file")
     parser.add_argument("--output_dir", type=str, required=True, help="Directory to save results")
-    parser.add_argument("--data_name", type=str, required=True, choices=['gui_odyssey_test', 'domestic_test', 'aitz_test', 'android_control_test', 'android_control_test_low'], help="Eval dataset name")
+    parser.add_argument("--data_name", type=str, required=True, choices=['gui_odyssey_test', 'chinese_app_test', 'aitz_test', 'android_control_high_test', 'android_control_low_test'], help="Eval dataset name")
     parser.add_argument("--eval_android_control", action="store_true", help="For evaluating android control")
     args = parser.parse_args()
 

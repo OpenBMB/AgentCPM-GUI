@@ -24,19 +24,19 @@
 
 ```
 # aitz_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/save --data_name aitz_test
+python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/aitz_test --data_name aitz_test
 
 # gui_odyssey_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/save --data_name gui_odyssey_test
+python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/gui_odyssey_test --data_name gui_odyssey_test
 
-# domestic_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/save --data_name domestic_test
+# chinese_app_test
+python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/chinese_app_test --data_name chinese_app_test
 
-# android_control_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/save --data_name android_control_test
+# android_control_high_test
+python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/android_control_high_test --data_name android_control_high_test
 
-# android_control_test_low
-python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/save --data_name android_control_test_low
+# android_control_low_test
+python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/android_control_low_test --data_name android_control_low_test
 
 # Grounding
 ……
@@ -46,19 +46,19 @@ python run_predict_minicpm.py --model_path /path/to/model --output_dir /path/to/
 
 ```
 # aitz_test
-python run_eval_minicpm.py --input_path /path/to/inference_results --output_dir /path/to/save --data_name aitz_test
+python run_eval_minicpm.py --input_path ./eval_results/aitz_test/all.jsonl --output_dir ./eval_results/aitz_test/results --data_name aitz_test
 
 # gui_odyssey_test
-python run_eval_minicpm.py --input_path /path/to/inference_results --output_dir /path/to/save --data_name gui_odyssey_test
+python run_eval_minicpm.py --input_path ./eval_results/gui_odyssey_test/all.jsonl --output_dir ./eval_results/gui_odyssey_test/results --data_name gui_odyssey_test
 
-# domestic_test
-python run_eval_minicpm.py --input_path /path/to/inference_results --output_dir /path/to/save --data_name domestic_test
+# chinese_app_test
+python run_eval_minicpm.py --input_path ./eval_results/chinese_app_test/all.jsonl --output_dir ./eval_results/chinese_app_test/results --data_name chinese_app_test
 
-# android_control_test
-python run_eval_minicpm.py --input_path /path/to/inference_results --output_dir /path/to/save --data_name android_control_test --eval_android_control
+# android_control_high_test
+python run_eval_minicpm.py --input_path ./eval_results/android_control_high_test/all.jsonl --output_dir ./eval_results/android_control_high_test/results --data_name android_control_test --android_control_high_test
 
-# android_control_test_low
-python run_eval_minicpm.py --input_path /path/to/inference_results --output_dir /path/to/save --data_name android_control_test_low --eval_android_control
+# android_control_low_test
+python run_eval_minicpm.py --input_path ./eval_results/android_control_low_test/all.jsonl --output_dir ./eval_results/android_control_low_test/results --data_name android_control_test_low --android_control_low_test
 
 # Grounding
 ……
