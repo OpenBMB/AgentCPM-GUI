@@ -40,7 +40,7 @@ class EvalDataset(object):
         self.episode_data = self._load_data_()
         self.data = self._split_to_steps_(self.episode_data)
 
-    def _load_data_(self): 
+    def _load_data_(self):
         valid_paths = defaultdict(list)
         for subset in self.DATASET_DIR:
             subdata_dir = self.DATASET_DIR[subset].format(self.data_dir)
@@ -51,7 +51,7 @@ class EvalDataset(object):
                     if not os.path.isdir(seq_dir): continue
                     episode_path = os.path.join(seq_dir, f"{seq_name}.json")
                     valid_paths[subset].append(episode_path)
-        
+
         sampled_paths = []
         for subset, v_paths in valid_paths.items():
             N = len(v_paths)
@@ -62,7 +62,7 @@ class EvalDataset(object):
         for episode_path in sampled_paths:
             try:
                 with open(episode_path, "r") as f:
-                    episode_data = json.load(f)                        
+                    episode_data = json.load(f)
                     ep_data.append(episode_data)
             except json.JSONDecodeError as e:
                 logging.error(f"JSON decoding failed, file: {episode_path}, error: {e}")
@@ -85,10 +85,10 @@ class EvalDataset(object):
                     logging.error(f"Error processing episode {edx}, step {idx}: {e}")
         return data
 
-    def __len__(self): 
+    def __len__(self):
         return len(self.data)
 
-    def __getitem__(self, index): 
+    def __getitem__(self, index):
         return self.data[index]
 
 def process_step_data(step_data, evaluator, save_dir):
@@ -127,7 +127,7 @@ def process_step_data(step_data, evaluator, save_dir):
             except json.JSONDecodeError as e:
                 logging.error(f"JSON decoding failed, file: {cur_save_path}, error: {e}")
                 pred = {'action_predict': {'COA': {'txt': {'ACTION': None, 'ARGS': None, 'STATUS': None}}}}
-        
+
         assert pred is not None
 
         # Use global evaluator to evaluate
@@ -140,7 +140,7 @@ def process_step_data(step_data, evaluator, save_dir):
 def evaluate(args):
 
     # Get dataset path
-    args.data_dir, args.split, _ = get_dataset_dir(args.data_name) 
+    args.data_dir, args.split, _ = get_dataset_dir(args.data_name)
 
     # Convert to aitz format
     convert2aitz(os.path.abspath(args.input_path), os.path.abspath(args.output_dir), max_workers=16)
@@ -194,7 +194,7 @@ def evaluate(args):
         logging.info(f"Evaluation summary saved to {summary_save_file}")
         with open(summary_save_file, 'w') as f:
             json.dump(episode_metrics|atomic_metrics, f, ensure_ascii=False)
-        
+
     except Exception as e:
         logging.error(f"Error computing evaluation metrics: {e}")
 
@@ -202,12 +202,21 @@ def evaluate(args):
 
 if __name__ == "__main__":
 
+    import sys
+    sys.argv = [
+        'run_eval_minicpm.py',  # Simulate command line run
+        '--input_path', '/home/test/test03/fuyikun/android_control_eval/eval_results/models/UI-TARS-7B-SFT/gui_odyssey_test/all.jsonl',
+        '--output_dir', '/home/test/test03/fuyikun/android_control_eval/eval_results/models/UI-TARS-7B-SFT/gui_odyssey_test/results',
+        '--data_name', 'gui_odyssey_test',
+        #'--eval_android_control',
+    ]
+
     parser = argparse.ArgumentParser(description="GUI Agent Eval")
     parser.add_argument("--seed", type=int, default=2020, help="Random seed")
     parser.add_argument("--input_path", type=str, required=True, help="Path to input prediction JSONL file")
     parser.add_argument("--output_dir", type=str, required=True, help="Directory to save results")
     parser.add_argument("--data_name", type=str, required=True, choices=['gui_odyssey_test', 'chinese_app_test', 'aitz_test', 'android_control_high_test', 'android_control_low_test'], help="Eval dataset name")
-    parser.add_argument("--eval_android_control", action="store_true", help="For evaluating android control")
+    parser.add_argument("--eval_android_control", action="store_true", help="For evaluating android control, which is different from other datasets according to qwen's scripts")
     args = parser.parse_args()
 
     logging.info(f"Received arguments: {args}")

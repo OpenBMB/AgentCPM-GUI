@@ -13,20 +13,19 @@ from PIL import Image
 from utils.utils import get_dataset_dir
 import argparse
 import logging
+import time
 
 DEVICES = [
-     "cuda:0", "cuda:1", 
-     "cuda:2", "cuda:3",
-      "cuda:4","cuda:5", "cuda:6", "cuda:7",
+    "cuda:0", "cuda:1", "cuda:2", "cuda:3",
+    "cuda:4","cuda:5", "cuda:6", "cuda:7",
     ]
-torch.set_num_threads(8)
 
 current_file_path = os.path.abspath(__file__)
 current_dir = os.path.dirname(current_file_path)
 
 if current_dir not in sys.path:
     sys.path.append(current_dir)
-    
+
 def compact_json_dumps(obj):
     return json.dumps(obj, indent=None, separators=(",", ":"), ensure_ascii=False)
 
@@ -70,9 +69,10 @@ def move_to(device):
         raise ValueError("Error, Tokenizer is not initialized.")
     return f"Moved to {device}"
 
+
 def run_episode(episode, msg,):
     global _llm,_tokenizer
-    outputs = _llm.chat(image=None, msgs=msg, system_prompt=SYSTEM_PROMPT, tokenizer=_tokenizer, temperature=0.1,top_p=0.3,n=1,)    
+    outputs = _llm.chat(image=None, msgs=msg, system_prompt=SYSTEM_PROMPT, tokenizer=_tokenizer, temperature=0.1,top_p=0.3,n=1,)
     episode["pred"] = extract_and_validate_json(outputs)
     return episode
 
@@ -86,7 +86,7 @@ def extract_and_validate_json(input_string):
         print("Error, JSON is NOT valid.")
         return input_string
     except Exception as e:
-        print("Error, JSON is NOT valid according to the schema.", e)
+        print(f"Error, JSON is NOT valid according to the schema.{input_string}", e)
         return input_string
 
 def load_image(episode, image_path, data_name):
@@ -109,7 +109,7 @@ def load_image(episode, image_path, data_name):
     image = Image.open(image_path).convert("RGB")
     image = __resize__(image)
 
-    if data_name == 'android_control_test_low':
+    if data_name == 'android_control_low_test':
         query = episode['low_instruction']
     else:
         query = episode['instruction']
@@ -128,35 +128,33 @@ def load_image(episode, image_path, data_name):
 
 
 def predict(args):
-    args.data_dir, args.split, data_subset = get_dataset_dir(args.data_name) 
+    args.data_dir, args.split, data_subset = get_dataset_dir(args.data_name)
     print(f"Predicting on: {args.data_dir}/{args.split}")
     print(f"Data subset: {data_subset}")
-    
+
     if multiprocessing.get_start_method(allow_none=True) != "spawn":
         multiprocessing.set_start_method("spawn", force=True)
-    
+
     with ProcessPoolExecutor(max_workers=len(DEVICES),initializer=_init_llm,initargs=(args.model_path,)) as poolexec:
         tasks = []
         print("Moving model to devices")
-        for device in DEVICES:
-            tasks.append(poolexec.submit(move_to, device))
-        for t in tasks:
-            print(t.result())
-    
+        futures = [poolexec.submit(move_to, dev) for dev in DEVICES]
+        for fut in futures: print(fut.result())
+
         for dataset in data_subset:
             save_dir = os.path.join(args.output_dir, dataset)
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
-                
+
             episode_dir = os.path.join(args.data_dir, args.split, dataset)
             output_file = os.path.join(save_dir, "predict.jsonl")
-            
+
             # Get the list of all episodes files
             if os.path.exists(episode_dir):
                 episodes_files = os.listdir(episode_dir)
             else:
                 continue
-            
+
             future = []
             all_tasks = []
             print("Loading episodes")
@@ -171,7 +169,7 @@ def predict(args):
                         print(f"Failed to load {episodes_path}: {e}")
                         continue
                         # Skip this file on error
-                    
+
                     for episode in episodes:
                         episode["category"] = dataset
                         image_path = os.path.join(episode_dir, episodes_file, f"{episodes_file}_{episode['step_id']}.jpeg")
@@ -189,7 +187,7 @@ def predict(args):
                 tasks = []
                 for task_value in all_tasks:
                     tasks.append(poolexec.submit(run_episode, *task_value))
-                
+
                 for task in tqdm(as_completed(tasks), total=len(tasks), dynamic_ncols=True):
                     try:
                         episode = task.result()
@@ -200,12 +198,22 @@ def predict(args):
                         print(f"Error: {e}")
                         continue
 
-        print(f"Prediction saved at: {output_file}.")
+            print(f"Prediction saved at: {output_file}.")
     os.system(f"cat {args.output_dir}/*/predict.jsonl > {args.output_dir}/all.jsonl")
     print(f"Merged prediction saved at: {args.output_dir}/all.jsonl.")
 
 
 if __name__ == "__main__":
+
+    import sys
+
+    sys.argv = [
+        'run_predict_minicpm_multi_turn.py',  # Simulate command line run
+        '--model_path', '/home/test/test12/lyx/ARL-TP/output/MiniCPMV-HW-7B-GRPO-1120px-32s-noKL-ARL-fsdp-mt3-hist5-react/checkpoint-120',
+        '--output_dir', 'eval_results/multi_turn',
+        '--data_name', 'aitz_test', 
+    ]
+
 
     parser = argparse.ArgumentParser(description="GUI Agent Inference")
     parser.add_argument("--seed", type=int, default=2020, help="Random seed")

@@ -101,7 +101,7 @@ def convert2aitz(input_path, output_path, max_workers=None):
     folders = set()
     tasks = []
     for item in data:
-        task = item.get("category", "unknown")
+        task = item.get("category", item.get("subset", "unknown"))
         episode_id = item.get("episode_id", "unknown")
         steps = item.get("steps", [item])
 

@@ -104,7 +104,7 @@ def get_dataset_dir(data_name):
         case 'chinese_app_test':
             data_dir = os.path.join(data_dir, "eval_data", "chinese_app_test")
             data_split = "test"
-            data_subset = ["chinese_app"]
+            data_subset = ["domestic"]
         case 'gui_odyssey_test':
             data_dir = os.path.join(data_dir, "eval_data", "odyssey")
             data_split = "test"

@@ -60,12 +60,12 @@ def check_inside(x, y, bbox_list):
     bbox_array = np.array(bbox_list)
     y_min, x_min, height, width = bbox_array[:, 0], bbox_array[:, 1], bbox_array[:, 2], bbox_array[:, 3]
     y_max, x_max = y_min + height, x_min + width
-    
+
     # Check whether (x, y) is inside any of the bounding boxes
     within_x = (x_min <= x) & (x <= x_max)
     within_y = (y_min <= y) & (y <= y_max)
     within_bbox = within_x & within_y
-    
+
     if np.any(within_bbox):
         within_bbox_coords = bbox_array[within_bbox]
         return True, within_bbox_coords
@@ -90,7 +90,7 @@ def obtain_gt_bbox(coordinate, bbox_list, eval_android_control=False):
             center_y = ymin + h/2
             center_x = xmin + w/2
             return ((center_y - y) ** 2 + (center_x - x) ** 2) ** 0.5
-            
+
         sorted_boxes = sorted(bbox_list, key=get_center_distance)
         # return the 5 nearest bboxes
         return sorted_boxes[:5]
@@ -100,12 +100,12 @@ def _get_direction(point1, point2):
     try:
         x1, y1 = point1["x"], point1["y"]
         x2, y2 = point2["x"], point2["y"]
-        
+
         assert x1 is not None
         assert x2 is not None
         assert y1 is not None
         assert y2 is not None
-            
+
         vector = (x2 - x1, y2 - y1)
         vx, vy = vector
     except Exception as e:
@@ -172,7 +172,7 @@ class ActionEvaluator(object):
         args = action_api.get('ARGS', None)
         status = action_api.get('STATUS', None)
         duration = args.get('duration', default_duration) if args else None
-        
+
         if action is None and args is None and status is None:
             print('Schema error.')
             return None, {}
@@ -192,7 +192,7 @@ class ActionEvaluator(object):
             return "stop", args['duration']
         else:
             raise ValueError("Unknown action type.")
-            
+
     def _parse_action_(self, pred, image_width=None, image_height=None):
         pd_action_type, pd_action_yx, pd_action_idx, pd_action_direction, pd_action_text, pd_action_button, pd_duration = (None, ) * 7
 
@@ -221,16 +221,16 @@ class ActionEvaluator(object):
                 pd_action_yx = {"x": 0.0, "y": 0.0}
         else:
             pd_action_yx = None
-        
+
         # Not supporting click by id
         pd_action_idx = None
-        
+
         # Process swipe
         pd_action_direction = get_direction(pd_action_args["start"], pd_action_args["end"]) if pd_action_type == "scroll" else None
 
         # Process text input
         pd_action_text = pd_action_args if pd_action_type == "type" else None
-        
+
         # Process button press
         pd_action_button = pd_action_args.lower() if pd_action_type == "press" else None
 
@@ -238,7 +238,7 @@ class ActionEvaluator(object):
         pd_duration = pd_action_args["duration"] if pd_action_type == "long_point" else None
 
         # Treat pause and wait as normal stop
-    
+
         return pd_action_type, pd_action_yx, pd_action_idx, pd_action_text, pd_action_button, pd_action_direction, pd_duration
 
 
@@ -258,7 +258,7 @@ class ActionEvaluator(object):
             normalized_start_yx = json.loads(normalized_start_yx)
             normalized_end_yx = gt['result_lift_yx']
             normalized_end_yx =json.loads(normalized_end_yx)
-            
+
             if is_tap_action(normalized_start_yx, normalized_end_yx):
                 gt_cand_nodes = json.loads(gt['ui_positions'])
                 gt_action_type = "click"
@@ -338,7 +338,7 @@ class ActionEvaluator(object):
         type_match = (pd_action_type is not None and gt_action_type == pd_action_type)
         exact_match = False
         text_dist = None
-        
+
         if type_match and (pd_action_type == "click" or pd_action_type == "long_point"):
             gt_cand_nodes = _resize_annotation_bounding_boxes(gt_cand_nodes, ANNOTATION_WIDTH_AUGMENT_FRACTION, ANNOTATION_HEIGHT_AUGMENT_FRACTION)
             gt_bbox = obtain_gt_bbox(gt_action_yx, gt_cand_nodes, self.eval_android_control)
@@ -350,7 +350,7 @@ class ActionEvaluator(object):
                 exact_match = bool(distance <= (_TAP_DISTANCE_THRESHOLD_AC if self.eval_android_control else _TAP_DISTANCE_THRESHOLD))
                 reference_point = gt_action_yx["x"], gt_action_yx["y"]
             else:
-                reference_point = gt_action_yx["x"], gt_action_yx["y"]  
+                reference_point = gt_action_yx["x"], gt_action_yx["y"]
                 for bbox in gt_bbox:
                     ymin, xmin, height, width = bbox
                     ymax, xmax = ymin + height, xmin + width
@@ -372,10 +372,11 @@ class ActionEvaluator(object):
             pd_text_norm = pd_action_text.lower().strip()
             gt_text_norm = gt_action_text.lower().strip()
 
-            exact_match = (pd_text_norm in gt_text_norm or
-                        gt_text_norm in pd_text_norm)   # align with Qwen‑2.5‑VL eval
-
             text_dist = Levenshtein.ratio(pd_text_norm, gt_text_norm)
+
+            # align with Qwen‑2.5‑VL eval
+            exact_match = (pd_text_norm in gt_text_norm or \
+                        gt_text_norm in pd_text_norm)
 
         if type_match and pd_action_type == "press":
             exact_match = (pd_action_button == gt_action_button)
@@ -394,7 +395,7 @@ class ActionEvaluator(object):
         if not type_match or (type_match and not exact_match):
             match_type = "No Type Match" if not type_match else "No Exact Match"
             print(f"\n{match_type}, pd action: {pd_action_type}, detail: {pd_action_detail}; gt action: {gt_action_type}, detail: {gt_action_detail}, {subset}_{episode_id}_{step_id}")
-        
+
         return {
             "subset": subset,
             "episode_id": episode_id,
@@ -422,16 +423,16 @@ class ActionEvaluator(object):
         for __, eplist in episode_results.items():
             ep_success, ep_progress = True, 0
             for ex in eplist:
-                if ex['exact_match'] is True: 
+                if ex['exact_match'] is True:
                     ep_progress += 1
                     total_exact_matches += 1
-                else: 
+                else:
                     ep_success = False
-                if not ep_success: 
+                if not ep_success:
                     break
             success.append(ep_success)
             progress.append(ep_progress/len(eplist)*1.0)
-        
+
         total_steps = 0
         for __, eplist in episode_results.items():
             for ex in eplist:
@@ -451,14 +452,14 @@ class ActionEvaluator(object):
     @staticmethod
     def compute_atomic_metrics(step_results):
         recorder = {
-            'total':  {'count':0, 'type_match':0, 'exact_match':0, "hit": 0}, 
+            'total':  {'count':0, 'type_match':0, 'exact_match':0, "hit": 0},
             # -------------------------------------------
-            'CLICK':  {'count':0, 'type_match':0, 'exact_match':0},  
+            'CLICK':  {'count':0, 'type_match':0, 'exact_match':0},
             'TYPE':   {'count':0, 'type_match':0, 'exact_match':0, 'text_dist': []},
-            'SCROLL': {'count':0, 'type_match':0, 'exact_match':0},  
-            'PRESS':  {'count':0, 'type_match':0, 'exact_match':0},  
-            'STOP':   {'count':0, 'type_match':0, 'exact_match':0}, 
-            'LONG_POINT':   {'count':0, 'type_match':0, 'exact_match':0}, 
+            'SCROLL': {'count':0, 'type_match':0, 'exact_match':0},
+            'PRESS':  {'count':0, 'type_match':0, 'exact_match':0},
+            'STOP':   {'count':0, 'type_match':0, 'exact_match':0},
+            'LONG_POINT':   {'count':0, 'type_match':0, 'exact_match':0},
         }
         for step in step_results:
             recorder['total']['count'] += 1
