@@ -137,15 +137,47 @@ python run_eval_agent.py --input_path ./eval_results/android_control_low_test/al
 
 ### Inference
 
-```
+```bash
 # aitz_test
+python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/android_control_low_test --data_name android_control_low_test
+
+# Grounding
 ……
 ```
+Additional params include: `--device`, `--temperature`, `--max_new_tokens`, `--mode`, see the code for more details.
 
 ### Eval
+The evaluation process is the same with the above
 
-```
+```bash
 # aitz_test
+python run_eval_agent.py --input_path ./eval_results/aitz_test/all.jsonl --output_dir ./eval_results/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/gui_odyssey_test/all.jsonl --output_dir ./eval_results/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/chinese_app_test/all.jsonl --output_dir ./eval_results/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/android_control_high_test/all.jsonl --output_dir ./eval_results/android_control_high_test/results --data_name android_control_test --android_control_high_test
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/android_control_low_test/all.jsonl --output_dir ./eval_results/android_control_low_test/results --data_name android_control_test_low --android_control_low_test
+
+# Grounding
 ……
 ```
 
@@ -155,14 +187,54 @@ python run_eval_agent.py --input_path ./eval_results/android_control_low_test/al
 
 ### Inference
 
+The OdysseyAgent uses modified model structure, so external code is required to run the code.
+
+Please copy the files of [OdysseyAgent](https://github.com/OpenGVLab/GUI-Odyssey/tree/master/OdysseyAgent) into directory `eval/utils/utils_odyssey`(create the directory first). Then you may proceed with the following command.
+
+```bash
+# run only once.
+pip install transformers_stream_generator==0.0.4
 ```
+
+```bash
 # aitz_test
-……
+python run_predict_odyssey.py --model_path /path/to/model --output_dir ./eval_results/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_odyssey.py --model_path /path/to/model --output_dir ./eval_results/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_odyssey.py --model_path /path/to/model --output_dir ./eval_results/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_odyssey.py --model_path /path/to/model --output_dir ./eval_results/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_odyssey.py --model_path /path/to/model --output_dir ./eval_results/android_control_low_test --data_name android_control_low_test
+
+# Grounding
 ```
+
+Additional params include: `--seed`, `--batch_size`, `--num_workers`, `--image_history`, `--his_len`, see the code for more details.
+
 
 ### Eval
-
-```
+The evaluation process is the same with the above.
+```bash
 # aitz_test
-……
+python run_eval_agent.py --input_path ./eval_results/aitz_test/all.jsonl --output_dir ./eval_results/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/gui_odyssey_test/all.jsonl --output_dir ./eval_results/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/chinese_app_test/all.jsonl --output_dir ./eval_results/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/android_control_high_test/all.jsonl --output_dir ./eval_results/android_control_high_test/results --data_name android_control_test --android_control_high_test
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/android_control_low_test/all.jsonl --output_dir ./eval_results/android_control_low_test/results --data_name android_control_test_low --android_control_low_test
+
+# Grounding
 ```
