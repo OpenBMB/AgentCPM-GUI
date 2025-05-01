@@ -205,10 +205,10 @@ if __name__ == "__main__":
     import sys
     sys.argv = [
         'run_eval_minicpm.py',  # Simulate command line run
-        '--input_path', '/home/test/test03/fuyikun/android_control_eval/eval_results/models/UI-TARS-7B-SFT/gui_odyssey_test/all.jsonl',
-        '--output_dir', '/home/test/test03/fuyikun/android_control_eval/eval_results/models/UI-TARS-7B-SFT/gui_odyssey_test/results',
-        '--data_name', 'gui_odyssey_test',
-        #'--eval_android_control',
+        '--input_path', '/home/test/test03/huoyupeng/gui_agent_benchmark/gpt4o_chineseapp/test/inference_result.jsonl',
+        '--output_dir', '/home/test/test03/huoyupeng/gui_agent_benchmark/gpt4o_chineseapp/test/results',
+        '--data_name', 'chinese_app_test',
+        # '--eval_android_control',
     ]
 
     parser = argparse.ArgumentParser(description="GUI Agent Eval")

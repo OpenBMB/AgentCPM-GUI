@@ -2,6 +2,7 @@
 
 ## Grounding Benchmark
 
+
 | Model                   | fun2point | text2point | bbox2text | average |
 |-------------------------|-----------|------------|-----------|--------|
 | **AgentCPM-GUI-8B**     | **79.1**  | **76.5**   | **58.2**  |**71.3**|
@@ -15,10 +16,12 @@
 | GPT-4o                  | 22.1      | 19.9       | 14.3      | 18.8   |
 | GPT-4o with Grounding   | 44.3      | 44.0       | 14.3      | 44.2   |
 
+
 ## Agent Benchmark
 
 | Dataset       | Android Control-Low TM | Android Control-Low EM | Android Control-High TM | Android Control-High EM | GUI-Odyssey TM | GUI-Odyssey EM | AITZ TM | AITZ EM | Chinese APP TM | Chinese APP EM |
 | ------------- | ---------------------- | ---------------------- | ----------------------- | ----------------------- | -------------- | -------------- | ------- | ------- | -------------- | -------------- |
+
 | **AgentCPM-GUI-8B** | **94.39** | **90.20** | **77.70** | **69.17** | **90.85** | **74.96** | **85.71** | **76.38** | **96.86** | **91.28** |
 |Qwen2.5-VL-7B  |92.11|82.12|69.65|57.36|55.33|40.90|73.16|57.58|68.53|48.80|
 |UI-TARS-7B     |93.52|88.89|68.53|60.81|78.79|57.33|71.74|55.31|71.01|53.92|
@@ -31,50 +34,45 @@
 |Claude         |-|19.40|-|12.50|60.90|-|-|-|-|-|
 >*不一致的训练/测试集划分
 
+
 ## MiniCPM-Agent
 
 ### Inference
 
 ```
 # aitz_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/aitz_test --data_name aitz_test
+python run_predict_qwen2_5VL.py --model_path ../model/AgentCPM-GUI --output_dir ./eval_results/AgentCPM-GUI/aitz_test --data_name aitz_test
 
 # gui_odyssey_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/gui_odyssey_test --data_name gui_odyssey_test
+python run_predict_qwen2_5VL.py --model_path ../model/AgentCPM-GUI --output_dir ./eval_results/AgentCPM-GUI/gui_odyssey_test --data_name gui_odyssey_test
 
 # chinese_app_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/chinese_app_test --data_name chinese_app_test
+python run_predict_qwen2_5VL.py --model_path ../model/AgentCPM-GUI --output_dir ./eval_results/AgentCPM-GUI/chinese_app_test --data_name chinese_app_test
 
 # android_control_high_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/android_control_high_test --data_name android_control_high_test
+python run_predict_qwen2_5VL.py --model_path ../model/AgentCPM-GUI --output_dir ./eval_results/AgentCPM-GUI/android_control_high_test --data_name android_control_high_test
 
 # android_control_low_test
-python run_predict_minicpm.py --model_path /path/to/model --output_dir ./eval_results/android_control_low_test --data_name android_control_low_test
-
-# Grounding
-……
+python run_predict_qwen2_5VL.py --model_path ../model/AgentCPM-GUI --output_dir ./eval_results/AgentCPM-GUI/android_control_low_test --data_name android_control_low_test
 ```
 
 ### Eval
 
 ```
 # aitz_test
-python run_eval_agent.py --input_path ./eval_results/aitz_test/all.jsonl --output_dir ./eval_results/aitz_test/results --data_name aitz_test
+python run_eval_agent.py --input_path ./eval_results/AgentCPM-GUI/aitz_test/all.jsonl --output_dir ./eval_results/AgentCPM-GUI/aitz_test/results --data_name aitz_test
 
 # gui_odyssey_test
-python run_eval_agent.py --input_path ./eval_results/gui_odyssey_test/all.jsonl --output_dir ./eval_results/gui_odyssey_test/results --data_name gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/AgentCPM-GUI/gui_odyssey_test/all.jsonl --output_dir ./eval_results/AgentCPM-GUI/gui_odyssey_test/results --data_name gui_odyssey_test
 
 # chinese_app_test
-python run_eval_agent.py --input_path ./eval_results/chinese_app_test/all.jsonl --output_dir ./eval_results/chinese_app_test/results --data_name chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/AgentCPM-GUI/chinese_app_test/all.jsonl --output_dir ./eval_results/AgentCPM-GUI/chinese_app_test/results --data_name chinese_app_test
 
 # android_control_high_test
-python run_eval_agent.py --input_path ./eval_results/android_control_high_test/all.jsonl --output_dir ./eval_results/android_control_high_test/results --data_name android_control_test --android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/AgentCPM-GUI/android_control_high_test/all.jsonl --output_dir ./eval_results/AgentCPM-GUI/android_control_high_test/results --data_name android_control_test --eval_android_control
 
 # android_control_low_test
-python run_eval_agent.py --input_path ./eval_results/android_control_low_test/all.jsonl --output_dir ./eval_results/android_control_low_test/results --data_name android_control_test_low --android_control_low_test
-
-# Grounding
-……
+python run_eval_agent.py --input_path ./eval_results/AgentCPM-GUI/android_control_low_test/all.jsonl --output_dir ./eval_results/AgentCPM-GUI/android_control_low_test/results --data_name android_control_test_low --eval_android_control
 ```
 
 ---
@@ -85,14 +83,38 @@ python run_eval_agent.py --input_path ./eval_results/android_control_low_test/al
 
 ```
 # aitz_test
-……
+python run_predict_minicpm.py --model_path ../model/Qwen2.5-VL-7B-Instruct --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_minicpm.py --model_path ../model/Qwen2.5-VL-7B-Instruct --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_minicpm.py --model_path ../model/Qwen2.5-VL-7B-Instruct --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_minicpm.py --model_path ../model/Qwen2.5-VL-7B-Instruct --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_minicpm.py --model_path ../model/Qwen2.5-VL-7B-Instruct --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_low_test --data_name android_control_low_test
 ```
 
 ### Eval
 
 ```
 # aitz_test
-……
+python run_eval_agent.py --input_path ./eval_results/Qwen2.5-VL-7B-Instruct/aitz_test/all.jsonl --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/Qwen2.5-VL-7B-Instruct/gui_odyssey_test/all.jsonl --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/Qwen2.5-VL-7B-Instruct/chinese_app_test/all.jsonl --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_high_test/all.jsonl --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_high_test/results --data_name android_control_test --eval_android_control
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_low_test/all.jsonl --output_dir ./eval_results/Qwen2.5-VL-7B-Instruct/android_control_low_test/results --data_name android_control_test_low --eval_android_control
 ```
 
 ---
@@ -103,14 +125,38 @@ python run_eval_agent.py --input_path ./eval_results/android_control_low_test/al
 
 ```
 # aitz_test
-……
+python run_predict_ui_tars.py --model_path ../model/UI-TARS-7B-SFT --output_dir ./eval_results/UI-TARS-7B-SFT/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_ui_tars.py --model_path ../model/UI-TARS-7B-SFT --output_dir ./eval_results/UI-TARS-7B-SFT/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_ui_tars.py --model_path ../model/UI-TARS-7B-SFT --output_dir ./eval_results/UI-TARS-7B-SFT/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_ui_tars.py --model_path ../model/UI-TARS-7B-SFT --output_dir ./eval_results/UI-TARS-7B-SFT/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_ui_tars.py --model_path ../model/UI-TARS-7B-SFT --output_dir ./eval_results/UI-TARS-7B-SFT/android_control_low_test --data_name android_control_low_test
 ```
 
 ### Eval
 
 ```
 # aitz_test
-……
+python run_eval_agent.py --input_path ./eval_results/UI-TARS-7B-SFT/aitz_test/all.jsonl --output_dir ./eval_results/UI-TARS-7B-SFT/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/UI-TARS-7B-SFT/gui_odyssey_test/all.jsonl --output_dir ./eval_results/UI-TARS-7B-SFT/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/UI-TARS-7B-SFT/chinese_app_test/all.jsonl --output_dir ./eval_results/UI-TARS-7B-SFT/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/UI-TARS-7B-SFT/android_control_high_test/all.jsonl --output_dir ./eval_results/UI-TARS-7B-SFT/android_control_high_test/results --data_name android_control_test --eval_android_control
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/UI-TARS-7B-SFT/android_control_low_test/all.jsonl --output_dir ./eval_results/UI-TARS-7B-SFT/android_control_low_test/results --data_name android_control_test_low --eval_android_control
 ```
 
 ---
@@ -121,40 +167,100 @@ python run_eval_agent.py --input_path ./eval_results/android_control_low_test/al
 
 ```
 # aitz_test
-……
+python run_predict_os_gensis.py --model_path ../model/OS-Genesis-7B-AC --output_dir ./eval_results/OS-Genesis-7B-AC/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_os_gensis.py --model_path ../model/OS-Genesis-7B-AC --output_dir ./eval_results/OS-Genesis-7B-AC/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_os_gensis.py --model_path ../model/OS-Genesis-7B-AC --output_dir ./eval_results/OS-Genesis-7B-AC/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_os_gensis.py --model_path ../model/OS-Genesis-7B-AC --output_dir ./eval_results/OS-Genesis-7B-AC/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_os_gensis.py --model_path ../model/OS-Genesis-7B-AC --output_dir ./eval_results/OS-Genesis-7B-AC/android_control_low_test --data_name android_control_low_test
 ```
 
 ### Eval
 
 ```
 # aitz_test
-……
+python run_eval_agent.py --input_path ./eval_results/OS-Genesis-7B-AC/aitz_test/all.jsonl --output_dir ./eval_results/OS-Genesis-7B-AC/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/OS-Genesis-7B-AC/gui_odyssey_test/all.jsonl --output_dir ./eval_results/OS-Genesis-7B-AC/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/OS-Genesis-7B-AC/chinese_app_test/all.jsonl --output_dir ./eval_results/OS-Genesis-7B-AC/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/OS-Genesis-7B-AC/android_control_high_test/all.jsonl --output_dir ./eval_results/OS-Genesis-7B-AC/android_control_high_test/results --data_name android_control_test --eval_android_control
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/OS-Genesis-7B-AC/android_control_low_test/all.jsonl --output_dir ./eval_results/OS-Genesis-7B-AC/android_control_low_test/results --data_name android_control_test_low --eval_android_control
 ```
 
 ---
+## OS-Atlas-Pro-7B
 
+### Inference
+
+```
+# aitz_test
+python run_predict_os_atlas.py --model_path ../model/OS-Atlas-Pro-7B --output_dir ./eval_results/OS-Atlas-Pro-7B/aitz_test --data_name aitz_test
+
+# gui_odyssey_test
+python run_predict_os_atlas.py --model_path ../model/OS-Atlas-Pro-7B --output_dir ./eval_results/OS-Atlas-Pro-7B/gui_odyssey_test --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_predict_os_atlas.py --model_path ../model/OS-Atlas-Pro-7B --output_dir ./eval_results/OS-Atlas-Pro-7B/chinese_app_test --data_name chinese_app_test
+
+# android_control_high_test
+python run_predict_os_atlas.py --model_path ../model/OS-Atlas-Pro-7B --output_dir ./eval_results/OS-Atlas-Pro-7B/android_control_high_test --data_name android_control_high_test
+
+# android_control_low_test
+python run_predict_os_atlas.py --model_path ../model/OS-Atlas-Pro-7B --output_dir ./eval_results/OS-Atlas-Pro-7B/android_control_low_test --data_name android_control_low_test
+```
+
+### Eval
+
+```
+# aitz_test
+python run_eval_agent.py --input_path ./eval_results/OS-Atlas-Pro-7B/aitz_test/all.jsonl --output_dir ./eval_results/OS-Atlas-Pro-7B/aitz_test/results --data_name aitz_test
+
+# gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/OS-Atlas-Pro-7B/gui_odyssey_test/all.jsonl --output_dir ./eval_results/OS-Atlas-Pro-7B/gui_odyssey_test/results --data_name gui_odyssey_test
+
+# chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/OS-Atlas-Pro-7B/chinese_app_test/all.jsonl --output_dir ./eval_results/OS-Atlas-Pro-7B/chinese_app_test/results --data_name chinese_app_test
+
+# android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/OS-Atlas-Pro-7B/android_control_high_test/all.jsonl --output_dir ./eval_results/OS-Atlas-Pro-7B/android_control_high_test/results --data_name android_control_test --eval_android_control
+
+# android_control_low_test
+python run_eval_agent.py --input_path ./eval_results/OS-Atlas-Pro-7B/android_control_low_test/all.jsonl --output_dir ./eval_results/OS-Atlas-Pro-7B/android_control_low_test/results --data_name android_control_test_low --eval_android_control
+```
 ## Aguvis-7B-720P
 
 ### Inference
 
 ```bash
 # aitz_test
-python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/aitz_test --data_name aitz_test
+
+python run_predict_aguvis.py  --model_path ../model/aguvis --output_dir ./eval_results/aguvis/aitz_test --data_name aitz_test
 
 # gui_odyssey_test
-python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/gui_odyssey_test --data_name gui_odyssey_test
+python run_predict_aguvis.py --model_path ../model/aguvis --output_dir ./eval_results/aguvis/gui_odyssey_test --data_name gui_odyssey_test
 
 # chinese_app_test
-python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/chinese_app_test --data_name chinese_app_test
+python run_predict_aguvis.py  --model_path ../model/aguvis --output_dir ./eval_results/aguvis/chinese_app_test --data_name chinese_app_test
 
 # android_control_high_test
-python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/android_control_high_test --data_name android_control_high_test
+python run_predict_aguvis.py  --model_path ../model/aguvis --output_dir ./eval_results/aguvis/android_control_high_test --data_name android_control_high_test
 
 # android_control_low_test
-python run_predict_aguvis.py --model_path /path/to/model --output_dir ./eval_results/android_control_low_test --data_name android_control_low_test
-
-# Grounding
-……
+python run_predict_aguvis.py  --model_path ../model/aguvis --output_dir ./eval_results/aguvis/android_control_low_test --data_name android_control_low_test
 ```
 Additional params include: `--device`, `--temperature`, `--max_new_tokens`, `--mode`, see the code for more details.
 
@@ -163,22 +269,20 @@ The evaluation process is the same with the above
 
 ```bash
 # aitz_test
-python run_eval_agent.py --input_path ./eval_results/aitz_test/all.jsonl --output_dir ./eval_results/aitz_test/results --data_name aitz_test
+
+python run_eval_agent.py --input_path ./eval_results/aguvis/aitz_test/all.jsonl --output_dir ./eval_results/aguvis/aitz_test/results --data_name aitz_test
 
 # gui_odyssey_test
-python run_eval_agent.py --input_path ./eval_results/gui_odyssey_test/all.jsonl --output_dir ./eval_results/gui_odyssey_test/results --data_name gui_odyssey_test
+python run_eval_agent.py --input_path ./eval_results/aguvis/gui_odyssey_test/all.jsonl --output_dir ./eval_results/aguvis/gui_odyssey_test/results --data_name gui_odyssey_test
 
 # chinese_app_test
-python run_eval_agent.py --input_path ./eval_results/chinese_app_test/all.jsonl --output_dir ./eval_results/chinese_app_test/results --data_name chinese_app_test
+python run_eval_agent.py --input_path ./eval_results/aguvis/chinese_app_test/all.jsonl --output_dir ./eval_results/aguvis/chinese_app_test/results --data_name chinese_app_test
 
 # android_control_high_test
-python run_eval_agent.py --input_path ./eval_results/android_control_high_test/all.jsonl --output_dir ./eval_results/android_control_high_test/results --data_name android_control_test --android_control_high_test
+python run_eval_agent.py --input_path ./eval_results/aguvis/android_control_high_test/all.jsonl --output_dir ./eval_results/aguvis/android_control_high_test/results --data_name android_control_test --eval_android_control
 
 # android_control_low_test
-python run_eval_agent.py --input_path ./eval_results/android_control_low_test/all.jsonl --output_dir ./eval_results/android_control_low_test/results --data_name android_control_test_low --android_control_low_test
-
-# Grounding
-……
+python run_eval_agent.py --input_path ./eval_results/aguvis/android_control_low_test/all.jsonl --output_dir ./eval_results/aguvis/android_control_low_test/results --data_name android_control_test_low --eval_android_control
 ```
 
 ---

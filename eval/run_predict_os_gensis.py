@@ -397,8 +397,8 @@ if __name__ == "__main__":
     args.data_dir, args.split, data_subset = get_dataset_dir(args.data_name)
     
     # Update output directory with model name
-    model_name = args.model_path.split("/")[-2:]  # Get last two parts of model path
-    args.output_dir = os.path.join(args.output_dir, *model_name, args.data_name)
+    # model_name = args.model_path.split("/")[-2:]  # Get last two parts of model path
+    # args.output_dir = os.path.join(args.output_dir, *model_name, args.data_name)
     
     print(f'Loading model at : {args.model_path}')
     print(f'Loading data at  : {args.data_dir}')
