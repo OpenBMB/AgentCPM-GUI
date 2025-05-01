@@ -37,7 +37,7 @@
     },
     "PRESS": {
       "type": "string",
-      "description": "触发特殊按键，HOME为回到主页按钮，BACK为返回按钮，ENTER为回撤按钮",
+      "description": "触发特殊按键，HOME为回到主页按钮，BACK为返回按钮，ENTER为回车按钮",
       "enum": [
         "HOME",
         "BACK",

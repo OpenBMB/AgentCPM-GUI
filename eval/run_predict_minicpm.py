@@ -139,7 +139,8 @@ def predict(args):
         tasks = []
         print("Moving model to devices")
         futures = [poolexec.submit(move_to, dev) for dev in DEVICES]
-        for fut in futures: print(fut.result())
+        for fut in futures: 
+            print(fut.result())
 
         for dataset in data_subset:
             save_dir = os.path.join(args.output_dir, dataset)
